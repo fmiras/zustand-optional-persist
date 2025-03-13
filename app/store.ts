@@ -26,6 +26,16 @@ export function useCounterStore({ persist = false }: { persist?: boolean }) {
     0
   );
 
+  // subscribe zustand to save new changes
+  useEffect(() => {
+    return useCounterStoreRaw.subscribe((state, previousState) => {
+      if (state.counter !== previousState.counter) {
+        // TODO add save function with debounce
+        setStoredCounter(state.counter);
+      }
+    });
+  }, []);
+
   // Load from localStorage when component mounts (only once)
   useEffect(() => {
     if (!persist || isLoading || storedCounter === undefined) {
@@ -34,15 +44,6 @@ export function useCounterStore({ persist = false }: { persist?: boolean }) {
 
     setCounter(storedCounter);
   }, [isLoading]);
-
-  // Update localStorage when counter changes in the store
-  useEffect(() => {
-    if (!persist || isLoading) {
-      return;
-    }
-
-    setStoredCounter(counter);
-  }, [counter, isLoading, setStoredCounter]);
 
   return {
     ...rest,

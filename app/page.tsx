@@ -4,7 +4,7 @@ import { useCounterStore } from "./store";
 
 export default function Home() {
   const { counter, increment, reset, isLoading } = useCounterStore({
-    persist: false,
+    persist: true,
   });
 
   if (isLoading) {
